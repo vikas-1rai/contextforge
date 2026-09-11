@@ -1,0 +1,37 @@
+{
+  "name": "contextforge-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ContextForge — persistent memory for AI coding agents, provided by AdoptNow.AI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vikasrai/contextforge"
+  },
+  "bugs": {
+    "url": "https://github.com/vikasrai/contextforge/issues"
+  },
+  "homepage": "https://github.com/vikasrai/contextforge#readme",
+  "workspaces": [
+    "packages/core",
+    "packages/vscode-extension"
+  ],
+  "scripts": {
+    "build": "npm run build -w packages/core",
+    "test": "npm test -w packages/core",
+    "clean": "npm run clean -w packages/core",
+    "bundle": "npm run bundle -w packages/core",
+    "binary": "npm run binary -w packages/core",
+    "lint": "eslint packages/*/src/**/*.ts"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Vikas Rai",
+  "license": "Apache-2.0",
+  "optionalDependencies": {
+    "sqlite-vec-darwin-x64": "^0.1.9",
+    "sqlite-vec-linux-arm64": "^0.1.9",
+    "sqlite-vec-linux-x64": "^0.1.9",
+    "sqlite-vec-windows-x64": "^0.1.9"
+  }
+}

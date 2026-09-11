@@ -1,0 +1,15 @@
+node_modules/
+dist/
+vscode/
+*.vsix
+archive/*.zip
+optimize-agent-context.pptx
+packages/*/release/
+packages/*/bundle/
+packages/*/server/node_modules/
+packages/*/server/models/
+packages/*/server/*.vsix
+packages/core/src/db/Untitled-1.sh
+.DS_Store
+*.db
+*.wal

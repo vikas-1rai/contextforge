@@ -1,0 +1,15 @@
+node_modules/
+src/
+tsconfig.json
+.vscode/
+*.map
+server/node_modules/**/README*
+server/node_modules/**/CHANGELOG*
+server/node_modules/**/LICENSE*
+server/node_modules/**/test/
+server/node_modules/**/docs/
+server/node_modules/**/*.ts
+server/node_modules/**/*.map
+server/node_modules/**/deps/
+server/node_modules/**/src/
+server/node_modules/**/binding.gyp

@@ -1,0 +1,245 @@
+{
+  "name": "contextforge-capture",
+  "displayName": "ContextForge",
+  "description": "Automatically captures AI agent conversations and stores them in a knowledge graph via MCP to optimize agent context across sessions. Provided by AdoptNow.AI.",
+  "version": "0.1.0",
+  "publisher": "vikasrai",
+  "author": "Vikas Rai",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vikasrai/contextforge"
+  },
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "categories": ["AI", "Other"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "contextforge.captureNow",
+        "title": "ContextForge: Capture Current Session"
+      },
+      {
+        "command": "contextforge.setup",
+        "title": "ContextForge: Re-run Setup"
+      },
+      {
+        "command": "contextforge.status",
+        "title": "ContextForge: Show Status"
+      },
+      {
+        "command": "contextforge.pause",
+        "title": "ContextForge: Pause Auto-Capture"
+      },
+      {
+        "command": "contextforge.resume",
+        "title": "ContextForge: Resume Auto-Capture"
+      }
+    ],
+    "configuration": {
+      "title": "ContextForge",
+      "properties": {
+        "contextforge.autoCapture": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically capture completed chat sessions"
+        },
+        "contextforge.captureDelaySeconds": {
+          "type": "number",
+          "default": 30,
+          "description": "Seconds to wait after last write before considering a session complete"
+        },
+        "contextforge.minMessages": {
+          "type": "number",
+          "default": 2,
+          "description": "Minimum number of messages required to capture a session"
+        },
+        "contextforge.binaryPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the ContextForge binary. Leave empty to use ~/.contextforge/contextforge"
+        }
+      }
+    },
+    "chatParticipants": [
+      {
+        "id": "contextforge.memory",
+        "name": "memory",
+        "fullName": "ContextForge",
+        "description": "Query and manage your persistent knowledge graph",
+        "isSticky": false,
+        "commands": [
+          {
+            "name": "save",
+            "description": "Save the current conversation to the knowledge graph"
+          },
+          {
+            "name": "search",
+            "description": "Search the knowledge graph for past work"
+          },
+          {
+            "name": "status",
+            "description": "Show memory status across all workspaces"
+          }
+        ]
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "contextforge_get_workspace_context",
+        "displayName": "Get Workspace Context",
+        "toolReferenceName": "cw-context",
+        "icon": "$(database)",
+        "tags": ["contextforge", "memory", "knowledge-graph"],
+        "modelDescription": "Get all known entities, relationships, and facts for a workspace. Use this at the start of a conversation to load relevant context from past work.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "workspace": { "type": "string", "description": "Workspace path to get context for" },
+            "limit": { "type": "number", "description": "Max entities to return. Default: 500. Pass 200 for small contexts, 500 for 128K models, 1000 max for 200K+. Do NOT exceed 1000." }
+          },
+          "required": ["workspace"]
+        }
+      },
+      {
+        "name": "contextforge_search_memory",
+        "displayName": "Search Memory",
+        "toolReferenceName": "cw-search",
+        "icon": "$(search)",
+        "tags": ["contextforge", "memory", "search"],
+        "modelDescription": "Search the knowledge graph for entities (files, functions, libraries, errors, decisions, patterns) and past conversations by semantic similarity. Use this to recall past work, decisions, and context from previous conversations across all workspaces.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": { "type": "string", "description": "Entity name or partial name to search for. Also searches conversation summaries semantically." },
+            "type": { "type": "string", "description": "Filter by entity type", "enum": ["file", "function", "class", "service", "library", "pattern", "error", "decision", "config", "endpoint", "test", "ticket"] },
+            "workspace": { "type": "string", "description": "Filter to a specific workspace path" },
+            "depth": { "type": "number", "description": "Graph traversal depth (default: 2)" },
+            "limit": { "type": "number", "description": "Max results (default: 20)" }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "name": "contextforge_save_conversation",
+        "displayName": "Save Conversation",
+        "toolReferenceName": "cw-save",
+        "icon": "$(save)",
+        "tags": ["contextforge", "memory", "conversation"],
+        "modelDescription": "Save a completed conversation. Extracts entities, relationships, and facts into the knowledge graph. Raw text is discarded after extraction. Call this when a meaningful conversation ends.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "workspace": { "type": "string", "description": "Workspace path where the conversation took place" },
+            "title": { "type": "string", "description": "Short title summarizing the conversation" },
+            "messages": {
+              "type": "array",
+              "description": "Array of conversation messages",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "role": { "type": "string", "enum": ["user", "assistant", "system", "tool"] },
+                  "content": { "type": "string" }
+                },
+                "required": ["role", "content"]
+              }
+            }
+          },
+          "required": ["workspace", "messages"]
+        }
+      },
+      {
+        "name": "contextforge_add_fact",
+        "displayName": "Add Fact",
+        "toolReferenceName": "cw-fact",
+        "icon": "$(note)",
+        "tags": ["contextforge", "memory", "fact"],
+        "modelDescription": "Store a specific fact about an entity. Use this to record decisions, patterns, conventions, or other knowledge that should persist.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "entityName": { "type": "string", "description": "Name of the entity (file, function, service, etc.)" },
+            "entityType": { "type": "string", "description": "Type of entity", "enum": ["file", "function", "class", "service", "library", "pattern", "error", "decision", "config", "endpoint", "test", "ticket"] },
+            "workspace": { "type": "string", "description": "Workspace path" },
+            "key": { "type": "string", "description": "Fact key (e.g. 'pattern', 'convention', 'reason', 'note')" },
+            "value": { "type": "string", "description": "Fact value" }
+          },
+          "required": ["entityName", "entityType", "workspace", "key", "value"]
+        }
+      },
+      {
+        "name": "contextforge_memory_status",
+        "displayName": "Memory Status",
+        "toolReferenceName": "cw-status",
+        "icon": "$(info)",
+        "tags": ["contextforge", "memory", "status"],
+        "modelDescription": "Show what is stored in the knowledge graph — list of workspaces, entity counts, fact counts, and date ranges. Use this to understand what the agent remembers.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "contextforge_cleanup_memory",
+        "displayName": "Cleanup Memory",
+        "toolReferenceName": "cw-cleanup",
+        "icon": "$(trash)",
+        "tags": ["contextforge", "memory", "cleanup"],
+        "modelDescription": "Delete knowledge from a specific time range. Use this when the user wants to clear recent memory (e.g. 'forget the last 2 hours'). Removes entities, facts, and relationships created within the specified time window.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "hours": { "type": "number", "description": "Delete knowledge from the last N hours" },
+            "workspace": { "type": "string", "description": "Optional: limit cleanup to a specific workspace" }
+          },
+          "required": ["hours"]
+        }
+      },
+      {
+        "name": "contextforge_forget_workspace",
+        "displayName": "Forget Workspace",
+        "toolReferenceName": "cw-forget",
+        "icon": "$(warning)",
+        "tags": ["contextforge", "memory", "delete"],
+        "modelDescription": "Completely erase all knowledge for a specific workspace. Use this when the user wants a fresh start for a project, or when stored knowledge is outdated/wrong. This is irreversible.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "workspace": { "type": "string", "description": "Workspace path to erase" },
+            "confirm": { "type": "boolean", "description": "Must be true to confirm deletion. This is irreversible." }
+          },
+          "required": ["workspace", "confirm"]
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "bundle": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify && esbuild src/vscode/lmTools.ts --bundle --outfile=dist/lmTools.bundle.js --external:vscode --external:better-sqlite3 --external:onnxruntime-node --format=cjs --platform=node --minify",
+    "prebundle-server": "cd ../core && npm run bundle",
+    "copy-server": "node scripts/prepare-server.js",
+    "package": "npm run bundle && npm run copy-server && npx @vscode/vsce package --no-dependencies",
+    "package:darwin-arm64": "CONTEXTFORGE_TARGET=darwin-arm64 npm run copy-server && npx @vscode/vsce package --no-dependencies --target darwin-arm64",
+    "package:darwin-x64": "CONTEXTFORGE_TARGET=darwin-x64 npm run copy-server && npx @vscode/vsce package --no-dependencies --target darwin-x64",
+    "package:win32-x64": "CONTEXTFORGE_TARGET=win32-x64 npm run copy-server && npx @vscode/vsce package --no-dependencies --target win32-x64",
+    "package:win32-arm64": "CONTEXTFORGE_TARGET=win32-arm64 npm run copy-server && npx @vscode/vsce package --no-dependencies --target win32-arm64",
+    "package:linux-x64": "CONTEXTFORGE_TARGET=linux-x64 npm run copy-server && npx @vscode/vsce package --no-dependencies --target linux-x64",
+    "package:linux-arm64": "CONTEXTFORGE_TARGET=linux-arm64 npm run copy-server && npx @vscode/vsce package --no-dependencies --target linux-arm64",
+    "package:all": "npm run bundle && npm run package:darwin-arm64 && npm run package:darwin-x64 && npm run package:win32-x64 && npm run package:linux-x64 && npm run package:linux-arm64",
+    "fetch-deps": "node scripts/fetch-native-deps.js",
+    "dist": "npm run fetch-deps && npm run prebundle-server && npm run package:all && node -e \"const fs=require('fs'),p=require('path');fs.mkdirSync('../../dist',{recursive:true});fs.readdirSync('.').filter(f=>f.endsWith('.vsix')).forEach(f=>{fs.renameSync(f,p.join('../../dist',f));console.log('  →',f)})\" && echo 'All VSIXs moved to dist/'",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.93.0",
+    "@types/node": "^20.0.0",
+    "typescript": "~5.5.0",
+    "esbuild": "^0.21.0",
+    "@vscode/vsce": "^2.25.0"
+  }
+}

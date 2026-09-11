@@ -1,0 +1,43 @@
+{
+  "name": "contextforge",
+  "version": "0.1.0",
+  "description": "ContextForge MCP server for persistent agent memory — provided by AdoptNow.AI",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "contextforge": "dist/server/mcp.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config jest.config.js",
+    "clean": "rm -rf dist bundle",
+    "bundle": "node build.js",
+    "binary": "node build.js --binary"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "better-sqlite3": "^11.7.0",
+    "onnxruntime-node": "^1.25.1",
+    "sqlite-vec": "^0.1.9"
+  },
+  "optionalDependencies": {
+    "sqlite-vec-darwin-arm64": "^0.1.9",
+    "sqlite-vec-darwin-x64": "^0.1.9",
+    "sqlite-vec-windows-x64": "^0.1.9",
+    "sqlite-vec-linux-x64": "^0.1.9",
+    "sqlite-vec-linux-arm64": "^0.1.9"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.14.0",
+    "@yao-pkg/pkg": "^6.0.0",
+    "esbuild": "^0.21.0",
+    "javascript-obfuscator": "^4.1.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0",
+    "typescript": "^5.5.0"
+  },
+  "author": "Vikas Rai",
+  "license": "Apache-2.0"
+}

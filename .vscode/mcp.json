@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "contextforge": {
+      "type": "stdio",
+      "command": "/Users/vikasrai/.nvm/versions/node/v24.21.0/bin/node",
+      "args": ["${workspaceFolder}/packages/core/dist/server/mcp.js"],
+      "env": {
+        "CONTEXTFORGE_MODEL_DIR": "${workspaceFolder}/packages/core/release/models"
+      }
+    }
+  }
+}
