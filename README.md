@@ -1,6 +1,6 @@
 # ContextForge
 
-Provided by [AdoptNow.AI](https://adoptnow.ai). AdoptNow.AI is currently a project domain, not a registered company.
+Powered by [AdoptNow.AI](https://adoptnow.ai). AdoptNow.AI is currently a project domain, not a registered company.
 
 **Graph-based knowledge storage for AI coding agents — works with any IDE via MCP.**
 

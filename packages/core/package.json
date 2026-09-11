@@ -1,7 +1,7 @@
 {
   "name": "contextforge",
   "version": "0.1.0",
-  "description": "ContextForge MCP server for persistent agent memory — provided by AdoptNow.AI",
+  "description": "ContextForge MCP server for persistent agent memory — powered by AdoptNow.AI",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {

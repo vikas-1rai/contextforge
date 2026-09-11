@@ -2,7 +2,7 @@
   "name": "contextforge-workspace",
   "version": "0.1.0",
   "private": true,
-  "description": "ContextForge — persistent memory for AI coding agents, provided by AdoptNow.AI",
+  "description": "ContextForge — persistent memory for AI coding agents, powered by AdoptNow.AI",
   "repository": {
     "type": "git",
     "url": "https://github.com/vikasrai/contextforge"

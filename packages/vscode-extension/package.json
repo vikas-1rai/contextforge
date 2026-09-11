@@ -1,7 +1,7 @@
 {
   "name": "contextforge-capture",
   "displayName": "ContextForge",
-  "description": "Automatically captures AI agent conversations and stores them in a knowledge graph via MCP to optimize agent context across sessions. Provided by AdoptNow.AI.",
+  "description": "Automatically captures AI agent conversations and stores them in a knowledge graph via MCP to optimize agent context across sessions. Powered by AdoptNow.AI.",
   "version": "0.1.0",
   "publisher": "vikasrai",
   "author": "Vikas Rai",
