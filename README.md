@@ -10,6 +10,35 @@ Distributed as a **single binary** — no source code, no npm install, no runtim
 
 ---
 
+## Quick Start
+
+### 1. Run the complete setup
+
+From a fresh ContextForge checkout, run:
+
+```bash
+npm run setup
+```
+
+This is the primary setup path. It installs dependencies, downloads the semantic-search model into the correct user cache, and builds the MCP server. It is safe to run again and reuses cached model files.
+
+After setup completes, configure your MCP client using the instructions below. For OS-specific details, see [SETUP-MAC.md](SETUP-MAC.md) or [SETUP-WINDOWS.md](SETUP-WINDOWS.md).
+
+### Alternative: use a packaged release
+
+```bash
+cp -r release/ ~/.contextforge/
+chmod +x ~/.contextforge/contextforge
+```
+
+### Model and release details
+
+`npm run setup` downloads the model from Hugging Face into `~/.contextforge/models/Xenova/all-MiniLM-L6-v2/`. The MCP server uses this local copy and does not access the network during searches. To only download the model after dependencies are already installed, use `npm run download:model --workspace packages/core`.
+
+For a packaged release, the release builder copies this cached model beside the binary when it is present. Set `CONTEXTFORGE_MODEL_DIR` if the model is stored elsewhere.
+
+---
+
 ## Table of Contents
 
 - [The Problem](#the-problem)
@@ -78,39 +107,6 @@ The agent calls MCP tools automatically — no manual invocation needed. The too
 - Repeated/duplicate content
 
 ---
-
-## Quick Start
-
-> **Recommended: one-command setup from source**
->
-> From a fresh ContextForge checkout, run:
->
-> ```bash
-> npm run setup
-> ```
->
-> This installs dependencies, downloads the semantic-search model into the correct user cache, and builds the MCP server. After it completes, configure your MCP client using the instructions below. The command is safe to run again and reuses cached model files.
-
-### 1. Copy the release folder
-
-```bash
-cp -r release/ ~/.contextforge/
-chmod +x ~/.contextforge/contextforge
-```
-
-### Alternative: package a release from source
-
-The model is not downloaded by `npm install` or the TypeScript build. From a source checkout, download it once with:
-
-```bash
-npm run setup
-```
-
-This single command installs dependencies, downloads the model, and builds the core MCP server. To only download the model after dependencies are already installed, use `npm run download:model --workspace packages/core`.
-
-This downloads the model from Hugging Face into `~/.contextforge/models/Xenova/all-MiniLM-L6-v2/`. The MCP server then uses the local copy and does not access the network during searches. The command is safe to run again; existing files are reused.
-
-For a packaged release, the release builder copies this cached model beside the binary when it is present. Set `CONTEXTFORGE_MODEL_DIR` if the model is stored elsewhere.
 
 ### 2. Configure MCP server in your IDE
 
