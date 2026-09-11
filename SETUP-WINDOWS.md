@@ -9,6 +9,16 @@ The single, complete setup guide for Windows x64. ContextForge stores its knowle
 
 ## Installation
 
+> **Recommended: one-command setup from source**
+>
+> From a fresh ContextForge checkout, run:
+>
+> ```powershell
+> npm run setup
+> ```
+>
+> This installs dependencies, downloads the semantic-search model into `%USERPROFILE%\.contextforge\models\Xenova\all-MiniLM-L6-v2\`, and builds the core MCP server. It is safe to run again because cached model files are reused. Continue to Step 3 to configure VS Code.
+
 ### Step 1: Copy the release folder
 
 From the person sharing ContextForge with you, get the `release/` folder. Then copy it to your user profile:
@@ -27,7 +37,24 @@ Get-ChildItem $env:USERPROFILE\.contextforge\contextforge.exe
 If your release uses a different filename, use that exact file in the next step.
 
 
-### Step 2: Configure MCP in VS Code
+### Step 2: Download the semantic-search model
+
+Semantic search requires the local `all-MiniLM-L6-v2` model. From the ContextForge source checkout, run:
+
+```powershell
+npm run setup
+```
+
+This single command installs dependencies, downloads the model once from Hugging Face, and builds the core MCP server. The model is placed at:
+
+```text
+%USERPROFILE%\.contextforge\models\Xenova\all-MiniLM-L6-v2\
+```
+
+The MCP server uses this local copy and does not download anything during normal searches. When building a release binary, run this step before `npm run binary` so the model is copied into the release package.
+
+
+### Step 3: Configure MCP in VS Code
 
 1. **Open MCP configuration**
    - Press `Ctrl+Shift+P`
@@ -65,7 +92,7 @@ If your release uses a different filename, use that exact file in the next step.
 3. **Save the file** — VS Code should reload the MCP connection automatically.
 
 
-### Step 3: Add agent instructions
+### Step 4: Add agent instructions
 
 This tells the Copilot agent to automatically use ContextForge's memory tools.
 
@@ -143,7 +170,7 @@ This tells the Copilot agent to automatically use ContextForge's memory tools.
 4. **Save the file** — you're done.
 
 
-### Step 4: Optional global access
+### Step 5: Optional global access
 
 If you want to run ContextForge from any terminal, add it to your PATH:
 
@@ -200,7 +227,7 @@ $env:USERPROFILE\.contextforge\contextforge.exe search --query "auth"
 
 ## Step 5 — (Optional) Connect the other MCP sources: KH, Rally, GitHub, Jira
 
-ContextForge is your **memory**. The agent can also pull from other sources, each configured as its **own MCP server** in the same VS Code MCP config from Step 2. Add whichever you need alongside `contextforge` in the `servers` object. If you skip any, nothing breaks — the agent just uses the sources that are present.
+ContextForge is your **memory**. The agent can also pull from other sources, each configured as its **own MCP server** in the same VS Code MCP config from Step 3. Add whichever you need alongside `contextforge` in the `servers` object. If you skip any, nothing breaks — the agent just uses the sources that are present.
 
 ```json
 {

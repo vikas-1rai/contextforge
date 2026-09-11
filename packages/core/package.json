@@ -11,6 +11,7 @@
     "build": "tsc",
     "test": "jest --config jest.config.js",
     "clean": "rm -rf dist bundle",
+    "download:model": "node scripts/download-model-online.js",
     "bundle": "node build.js",
     "binary": "node build.js --binary"
   },

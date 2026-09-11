@@ -16,6 +16,7 @@
     "packages/vscode-extension"
   ],
   "scripts": {
+    "setup": "npm install && npm run download:model --workspace packages/core && npm run build",
     "build": "npm run build -w packages/core",
     "test": "npm test -w packages/core",
     "clean": "npm run clean -w packages/core",

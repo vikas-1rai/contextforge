@@ -14,6 +14,16 @@ The single, complete setup guide for macOS. ContextForge stores its knowledge gr
 
 ## Installation
 
+> **Recommended: one-command setup from source**
+>
+> From a fresh ContextForge checkout, run:
+>
+> ```bash
+> npm run setup
+> ```
+>
+> This installs dependencies, downloads the semantic-search model into `~/.contextforge/models/Xenova/all-MiniLM-L6-v2/`, and builds the core MCP server. It is safe to run again because cached model files are reused. Continue to Step 3 to configure VS Code.
+
 ### Step 1: Copy the binary
 
 From the person sharing ContextForge with you, get the `release/` folder. Then:
@@ -32,9 +42,25 @@ ls -lh ~/.contextforge/contextforge
 
 You should see a 45–50MB executable.
 
+### Step 2: Download the semantic-search model
+
+Semantic search requires the local `all-MiniLM-L6-v2` model. From the ContextForge source checkout, run:
+
+```bash
+npm run setup
+```
+
+This single command installs dependencies, downloads the model once from Hugging Face, and builds the core MCP server. The model is placed at:
+
+```text
+~/.contextforge/models/Xenova/all-MiniLM-L6-v2/
+```
+
+The MCP server uses this local copy and does not download anything during normal searches. When building a release binary, run this step before `npm run binary` so the model is copied into the release package.
+
 ---
 
-### Step 2: Configure MCP in VS Code
+### Step 3: Configure MCP in VS Code
 
 1. **Open MCP configuration**
    - Press `Cmd+Shift+P`
@@ -58,7 +84,7 @@ You should see a 45–50MB executable.
 
 ---
 
-### Step 3: Add agent instructions
+### Step 4: Add agent instructions
 
 This tells the Copilot agent to automatically use ContextForge's memory tools.
 
@@ -129,7 +155,7 @@ This tells the Copilot agent to automatically use ContextForge's memory tools.
 
 ---
 
-### Step 4: (Optional) Global CLI access
+### Step 5: (Optional) Global CLI access
 
 Add the binary to your PATH so you can run `contextforge` from any terminal:
 
@@ -164,7 +190,7 @@ If you skip this step, use the full path `~/.contextforge/contextforge` instead.
 
 ## Step 5 — (Optional) Connect the other MCP sources: KH, Rally, GitHub, Jira
 
-ContextForge is your **memory**. The agent can also pull from other sources, each configured as its **own MCP server** in the same VS Code MCP config from Step 2. Add whichever you need alongside `contextforge` in the `servers` object. If you skip any, nothing breaks — the agent just uses the sources that are present.
+ContextForge is your **memory**. The agent can also pull from other sources, each configured as its **own MCP server** in the same VS Code MCP config from Step 3. Add whichever you need alongside `contextforge` in the `servers` object. If you skip any, nothing breaks — the agent just uses the sources that are present.
 
 ```json
 {
